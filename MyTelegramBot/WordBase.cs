@@ -8,7 +8,9 @@ namespace MyTelegramBot
 class WordBase
   {
     string path = @"..\..\resources\wordbase.json";
-    
+
+    Random rand = new Random();
+
     public List<string> Greetings { get; set; }
     public List<string> SingleAdjectives { get; set; }
     public List<string> ChatAdjectives { get; set; }
@@ -43,7 +45,6 @@ class WordBase
     public string GenerateGreetingMessage(bool chat = false)
     {
       string msg;
-      Random rand = new Random();
       int greetRand = rand.Next(Greetings.Count - 1);
       int adjRand = chat ? rand.Next(ChatAdjectives.Count - 1) : rand.Next(SingleAdjectives.Count - 1);
       int nounRand = chat ? rand.Next(ChatNouns.Count - 1) : rand.Next(SingleNouns.Count - 1);
