@@ -17,9 +17,11 @@ namespace MyTelegramBot
     class Program
     {
         private static readonly TelegramBotClient Bot = new TelegramBotClient(ConfigurationManager.AppSettings["myToken"]);
+        private static WordBase wb;
 
         static void Main(string[] args)
         {
+            wb = new WordBase();
             Bot.OnCallbackQuery += BotOnCallbackQueryReceived;
             Bot.OnMessage += BotOnMessageReceived;
             Bot.OnMessageEdited += BotOnMessageReceived;
@@ -85,82 +87,9 @@ namespace MyTelegramBot
 
             if (message == null || message.Type != MessageType.TextMessage) return;
 
-            if (message.Text.StartsWith("/inline")) // send inline keyboard
+           if(message.Text.StartsWith("/hello"))
             {
-                await Bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-
-                var keyboard = new InlineKeyboardMarkup(new[]
-                {
-                    new[] // first row
-                    {
-                        new InlineKeyboardButton("1.1"),
-                        new InlineKeyboardButton("1.2"),
-                    },
-                    new[] // second row
-                    {
-                        new InlineKeyboardButton("2.1"),
-                        new InlineKeyboardButton("2.2"),
-                    }
-                });
-
-                await Task.Delay(500); // simulate longer running task
-
-                await Bot.SendTextMessageAsync(message.Chat.Id, "Choose",
-                    replyMarkup: keyboard);
-            }
-            else if (message.Text.StartsWith("/keyboard")) // send custom keyboard
-            {
-                var keyboard = new ReplyKeyboardMarkup(new[]
-                {
-                    new [] // first row
-                    {
-                        new KeyboardButton("1.1"),
-                        new KeyboardButton("1.2"),
-                    },
-                    new [] // last row
-                    {
-                        new KeyboardButton("2.1"),
-                        new KeyboardButton("2.2"),
-                    }
-                });
-
-                await Bot.SendTextMessageAsync(message.Chat.Id, "Choose",
-                    replyMarkup: keyboard);
-            }
-            else if (message.Text.StartsWith("/photo")) // send a photo
-            {
-                await Bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
-
-                const string file = @"<FilePath>";
-
-                var fileName = file.Split('\\').Last();
-
-                using (var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    var fts = new FileToSend(fileName, fileStream);
-
-                    await Bot.SendPhotoAsync(message.Chat.Id, fts, "Nice Picture");
-                }
-            }
-            else if (message.Text.StartsWith("/request")) // request location or contact
-            {
-                var keyboard = new ReplyKeyboardMarkup(new[]
-                {
-                    new KeyboardButton("Location")
-                    {
-                        RequestLocation = true
-                    },
-                    new KeyboardButton("Contact")
-                    {
-                        RequestContact = true
-                    },
-                });
-
-                await Bot.SendTextMessageAsync(message.Chat.Id, "Who or Where are you?", replyMarkup: keyboard);
-            }
-            else if(message.Text.StartsWith("/hello"))
-            {
-                string greetingMessage = @"Hello From Tophails bot, kiss my anus! =)";
+                string greetingMessage = wb.GenerateGreetingMessage(false);
 
                 await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
                     replyMarkup: new ReplyKeyboardHide());
@@ -168,10 +97,7 @@ namespace MyTelegramBot
             else
             {
                 var usage = @"Usage:
-/inline   - send inline keyboard
-/keyboard - send custom keyboard
-/photo    - send a photo
-/request  - request location or contact
+/hello   - bot will say hello to you creatively =)
 ";
 
                 await Bot.SendTextMessageAsync(message.Chat.Id, usage,

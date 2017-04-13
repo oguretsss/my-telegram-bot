@@ -1,0 +1,11 @@
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\MyTelegramBot.exe.config
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\MyTelegramBot.exe
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\MyTelegramBot.pdb
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\Newtonsoft.Json.dll
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\System.Net.Http.Formatting.dll
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\Telegram.Bot.dll
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\Newtonsoft.Json.xml
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\System.Net.Http.Formatting.xml
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\Telegram.Bot.xml
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\obj\Release\MyTelegramBot.exe
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\obj\Release\MyTelegramBot.pdb

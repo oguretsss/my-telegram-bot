@@ -10,3 +10,15 @@ D:\Visual Studio Projects\MyTelegramBot\MyTelegramBot\bin\Debug\Telegram.Bot.xml
 D:\Visual Studio Projects\MyTelegramBot\MyTelegramBot\obj\Debug\MyTelegramBot.csprojResolveAssemblyReference.cache
 D:\Visual Studio Projects\MyTelegramBot\MyTelegramBot\obj\Debug\MyTelegramBot.exe
 D:\Visual Studio Projects\MyTelegramBot\MyTelegramBot\obj\Debug\MyTelegramBot.pdb
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\MyTelegramBot.exe.config
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\obj\Debug\MyTelegramBot.exe
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\obj\Debug\MyTelegramBot.pdb
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\MyTelegramBot.exe
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\MyTelegramBot.pdb
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\Newtonsoft.Json.dll
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\System.Net.Http.Formatting.dll
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\Telegram.Bot.dll
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\Newtonsoft.Json.xml
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\System.Net.Http.Formatting.xml
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Debug\Telegram.Bot.xml
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\obj\Debug\MyTelegramBot.csprojResolveAssemblyReference.cache
