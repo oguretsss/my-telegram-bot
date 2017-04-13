@@ -45,9 +45,9 @@ class WordBase
     public string GenerateGreetingMessage(bool chat = false)
     {
       string msg;
-      int greetRand = rand.Next(Greetings.Count - 1);
-      int adjRand = chat ? rand.Next(ChatAdjectives.Count - 1) : rand.Next(SingleAdjectives.Count - 1);
-      int nounRand = chat ? rand.Next(ChatNouns.Count - 1) : rand.Next(SingleNouns.Count - 1);
+      int greetRand = rand.Next(Greetings.Count );
+      int adjRand = chat ? rand.Next(ChatAdjectives.Count) : rand.Next(SingleAdjectives.Count);
+      int nounRand = chat ? rand.Next(ChatNouns.Count) : rand.Next(SingleNouns.Count);
 
       string greet = Greetings[greetRand];
       string adj = chat ? ChatAdjectives[adjRand] : SingleAdjectives[adjRand];
