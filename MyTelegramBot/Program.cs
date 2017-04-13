@@ -2,12 +2,9 @@
 using System.Configuration;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.InputMessageContents;
@@ -15,7 +12,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot
 {
-    class Program
+  class Program
     {
         private static readonly TelegramBotClient Bot = new TelegramBotClient(ConfigurationManager.AppSettings["myToken"]);
         private static WordBase wb;
@@ -89,14 +86,31 @@ namespace MyTelegramBot
           var message = messageEventArgs.Message;
       
           if (message == null || message.Type != MessageType.TextMessage) return;
-      Console.WriteLine(message.Text + message.Chat.Type.ToString()+IsGreetMessage(message.Text));
+
       if ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup) && IsGreetMessage(message.Text))
       {
         string greetingMessage = wb.GenerateGreetingMessage(true);
 
         await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
             replyMarkup: new ReplyKeyboardHide());
-      } 
+      }
+      if ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup) 
+        && (message.Text.ToLower().Contains("федот") || message.Text.ToLower().Contains("манул")))
+      {
+        string msg = "Манул, кстати, еще тот говноед!";
+
+        await Bot.SendTextMessageAsync(message.Chat.Id, msg,
+            replyMarkup: new ReplyKeyboardHide());
+      }
+
+      if ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup)
+        && message.Text.ToLower().Contains("мартын"))
+      {
+        string msg = "Мартын, учи питон!";
+
+        await Bot.SendTextMessageAsync(message.Chat.Id, msg,
+            replyMarkup: new ReplyKeyboardHide());
+      }
       else if (message.Text.StartsWith("/hello"))
         {
           string greetingMessage = wb.GenerateGreetingMessage(false);
