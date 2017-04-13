@@ -34,7 +34,7 @@ namespace MyTelegramBot
                 Dictionary<string, List<string>> values = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(json);
                 Greetings = values["greetings"];
                 SingleAdjectives = values["single-adjectives"];
-                ChatAdjectives = values["single-adjectives"];
+                ChatAdjectives = values["chat-adjectives"];
                 SingleNouns = values["single-nouns"];
                 ChatNouns = values["chat-nouns"];
             }

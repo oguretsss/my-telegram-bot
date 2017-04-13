@@ -9,3 +9,4 @@ D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\System.Net.Http.Fo
 D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\bin\Release\Telegram.Bot.xml
 D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\obj\Release\MyTelegramBot.exe
 D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\obj\Release\MyTelegramBot.pdb
+D:\VSProjects\MyBot\my-telegram-bot\MyTelegramBot\obj\Release\MyTelegramBot.csprojResolveAssemblyReference.cache

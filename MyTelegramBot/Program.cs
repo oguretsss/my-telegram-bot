@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,11 +19,13 @@ namespace MyTelegramBot
     {
         private static readonly TelegramBotClient Bot = new TelegramBotClient(ConfigurationManager.AppSettings["myToken"]);
         private static WordBase wb;
-
-        static void Main(string[] args)
-        {
-            wb = new WordBase();
-            Bot.OnCallbackQuery += BotOnCallbackQueryReceived;
+    private static List<string> greetingStrings;
+    static void Main(string[] args)
+    {
+      wb = new WordBase();
+      greetingStrings = new List<string>();
+      greetingStrings.AddRange(new string[] { "привет", "шалом", "здорово,", "доброе утро"});
+      Bot.OnCallbackQuery += BotOnCallbackQueryReceived;
             Bot.OnMessage += BotOnMessageReceived;
             Bot.OnMessageEdited += BotOnMessageReceived;
             Bot.OnInlineQuery += BotOnInlineQueryReceived;
@@ -83,32 +86,46 @@ namespace MyTelegramBot
 
         private static async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
-            var message = messageEventArgs.Message;
+          var message = messageEventArgs.Message;
+      
+          if (message == null || message.Type != MessageType.TextMessage) return;
+      Console.WriteLine(message.Text + message.Chat.Type.ToString()+IsGreetMessage(message.Text));
+      if ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup) && IsGreetMessage(message.Text))
+      {
+        string greetingMessage = wb.GenerateGreetingMessage(true);
 
-            if (message == null || message.Type != MessageType.TextMessage) return;
+        await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
+            replyMarkup: new ReplyKeyboardHide());
+      } 
+      else if (message.Text.StartsWith("/hello"))
+        {
+          string greetingMessage = wb.GenerateGreetingMessage(false);
 
-           if(message.Text.StartsWith("/hello"))
-            {
-                string greetingMessage = wb.GenerateGreetingMessage(false);
-
-                await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
-                    replyMarkup: new ReplyKeyboardHide());
-            }
-            else
-            {
-                var usage = @"Usage:
+          await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
+                replyMarkup: new ReplyKeyboardHide());
+        }
+      else if(message.Text.StartsWith("/help"))
+        {
+            var usage = @"Usage:
 /hello   - bot will say hello to you creatively =)
 ";
 
-                await Bot.SendTextMessageAsync(message.Chat.Id, usage,
-                    replyMarkup: new ReplyKeyboardHide());
-            }
-        }
+            await Bot.SendTextMessageAsync(message.Chat.Id, usage,
+                replyMarkup: new ReplyKeyboardHide());
+          }
+      }
 
         private static async void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
         {
-            await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
+      
+      Console.WriteLine("CALLBACK "+callbackQueryEventArgs.CallbackQuery.Message.Text.ToString());
+      await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
                 $"Received {callbackQueryEventArgs.CallbackQuery.Data}");
         }
+    private static bool IsGreetMessage(string msg)
+    {
+      bool b = greetingStrings.Any(s => msg.ToLower().Contains(s));
+      return b;
+    }
     }
 }
