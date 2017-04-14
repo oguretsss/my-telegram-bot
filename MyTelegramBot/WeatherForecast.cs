@@ -32,13 +32,9 @@ namespace MyTelegramBot
         json = reader.ReadToEnd();
       }
 
-      JObject instafeed = JObject.Parse(json);
-      JArray images = (JArray)instafeed["items"];
-      List<string> imageList = images
-                          .Select(img => (string)img["images"]["standard_resolution"]["url"])
-                          .Take(quantity)
-                          .ToList();
-      return imageList;
+      JObject forecast = JObject.Parse(json);
+
+      //return imageList;
 
       return 1;
     }
