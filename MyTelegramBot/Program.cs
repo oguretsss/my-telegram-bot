@@ -127,7 +127,7 @@ namespace MyTelegramBot
             await Bot.SendTextMessageAsync(message.Chat.Id, usage,
                 replyMarkup: new ReplyKeyboardHide());
           }
-      }
+    }
 
         private static async void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
         {
