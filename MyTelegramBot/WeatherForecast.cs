@@ -13,8 +13,7 @@ namespace MyTelegramBot
 {
   public class WeatherForecast
   {
-    string url = ConfigurationManager.AppSettings["weatherApiRequestUrl"];
-    private HttpClient weatherClient;
+    string url = @"http://api.openweathermap.org/data/2.5/weather?id=524901&appid=e702171c9cac4d1eebacff92c8571b65";
 
     public WeatherForecast()
     {
@@ -33,10 +32,10 @@ namespace MyTelegramBot
       }
 
       JObject forecast = JObject.Parse(json);
+      int temperature = forecast["main"]["temp"].Value<int>();
+      temperature -= 273;
 
-      //return imageList;
-
-      return 1;
+      return temperature;
     }
   }
 }

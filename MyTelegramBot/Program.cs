@@ -14,12 +14,14 @@ namespace MyTelegramBot
 {
   class Program
     {
-        private static readonly TelegramBotClient Bot = new TelegramBotClient(ConfigurationManager.AppSettings["myToken"]);
-        private static WordBase wb;
+      private static readonly TelegramBotClient Bot = new TelegramBotClient(ConfigurationManager.AppSettings["myToken"]);
+      private static WordBase wb;
+      private static WeatherForecast forecast;
     private static List<string> greetingStrings;
     static void Main(string[] args)
     {
       wb = new WordBase();
+      forecast = new WeatherForecast();
       greetingStrings = new List<string>();
       greetingStrings.AddRange(new string[] { "привет", "шалом", "здорово,", "доброе утро"});
       Bot.OnCallbackQuery += BotOnCallbackQueryReceived;
@@ -118,6 +120,15 @@ namespace MyTelegramBot
           await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
                 replyMarkup: new ReplyKeyboardHide());
         }
+      else if ((message.Text.StartsWith("/weather")) || ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup)
+        && message.Text.ToLower().Contains("погода")))
+      {
+        int weather = forecast.GetWeather();
+        string msg = "Погода в Москве сейчас " + weather + " градусов по Цельсию.";
+
+        await Bot.SendTextMessageAsync(message.Chat.Id, msg,
+              replyMarkup: new ReplyKeyboardHide());
+      }
       else if(message.Text.StartsWith("/help"))
         {
             var usage = @"Usage:
