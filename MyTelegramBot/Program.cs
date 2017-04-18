@@ -42,7 +42,7 @@ namespace MyTelegramBot
 
         private static void BotOnReceiveError(object sender, ReceiveErrorEventArgs receiveErrorEventArgs)
         {
-            Debugger.Break();
+      Debugger.Break();
         }
 
         private static void BotOnChosenInlineResultReceived(object sender, ChosenInlineResultEventArgs chosenInlineResultEventArgs)
@@ -83,20 +83,20 @@ namespace MyTelegramBot
             await Bot.AnswerInlineQueryAsync(inlineQueryEventArgs.InlineQuery.Id, results, isPersonal: true, cacheTime: 0);
         }
 
-        private static async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
-        {
-          var message = messageEventArgs.Message;
+    private static async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+    {
+      var message = messageEventArgs.Message;
       
-          if (message == null || message.Type != MessageType.TextMessage) return;
+      if (message == null || message.Type != MessageType.TextMessage) return;
 
-      if ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup) && IsGreetMessage(message.Text))
+      if ((message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup) && IsGreetMessage(message.Text))
       {
         string greetingMessage = wb.GenerateGreetingMessage(true);
 
         await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
             replyMarkup: new ReplyKeyboardHide());
       }
-      if ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup) 
+      if ((message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup) 
         && (message.Text.ToLower().Contains("федот") || message.Text.ToLower().Contains("манул")))
       {
         string msg = "Манул, кстати, еще тот говноед!";
@@ -105,7 +105,7 @@ namespace MyTelegramBot
             replyMarkup: new ReplyKeyboardHide());
       }
 
-      if ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup)
+      else if((message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup)
         && message.Text.ToLower().Contains("мартын"))
       {
         string msg = "Мартын, учи питон!";
@@ -114,13 +114,13 @@ namespace MyTelegramBot
             replyMarkup: new ReplyKeyboardHide());
       }
       else if (message.Text.StartsWith("/hello"))
-        {
-          string greetingMessage = wb.GenerateGreetingMessage(false);
+      {
+        string greetingMessage = wb.GenerateGreetingMessage(false);
 
-          await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
+        await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
                 replyMarkup: new ReplyKeyboardHide());
-        }
-      else if ((message.Text.StartsWith("/weather")) || ((message.Chat.Type == ChatType.Supergroup || message.Chat.Type == ChatType.Supergroup)
+      }
+      else if ((message.Text.StartsWith("/weather")) || ((message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup)
         && message.Text.ToLower().Contains("погода")))
       {
         int weather = forecast.GetWeather();
@@ -129,28 +129,106 @@ namespace MyTelegramBot
         await Bot.SendTextMessageAsync(message.Chat.Id, msg,
               replyMarkup: new ReplyKeyboardHide());
       }
+      else if (message.Text.StartsWith("/debug"))
+      {
+        string msg = "Debug info:\t\n";
+        msg += "Message Date: "+message.Date.ToShortTimeString()+"\n";
+        msg += "Sender ID: "+message.From.Id+"\n";
+        msg += "Sender Last Name: "+message.From.LastName+"\n";
+        msg += "Sender User Name: " + message.From.Username+"\n";
+        //msg += "Reply To message text: " + message.ReplyToMessage.Text+"\n";
+
+        await Bot.SendTextMessageAsync(message.Chat.Id, msg,
+              replyMarkup: new ReplyKeyboardHide());
+      }
+
+      else if (message.Text.StartsWith("/party") && message.Chat.Type == ChatType.Private)
+      {
+        UserSession session  = SessionManager.GetSessionByUserId(message.From.Id);
+        session.CurrentState = SessionState.CreateParty;
+        string msg = @"Для создания новой вечеринки введите следущие данные: 
+Имя организатора
+Название мероприятия
+Время начала (в любом формате)
+Описание вечеринки
+
+Внимание! Каждое поле должно начинаться с новой строки. Например:
+Вася
+Дико угарная вечеринка у Васи на хате.
+Сегодня в 22.30
+Всех жду, все угарим, приносите еду и выпивку с собой";
+
+        await Bot.SendTextMessageAsync(message.Chat.Id, msg,
+              replyMarkup: new ReplyKeyboardHide());
+      }
       else if(message.Text.StartsWith("/help"))
-        {
-            var usage = @"Usage:
+      {
+        var usage = @"Usage:
 /hello   - bot will say hello to you creatively =)
 ";
 
-            await Bot.SendTextMessageAsync(message.Chat.Id, usage,
+        await Bot.SendTextMessageAsync(message.Chat.Id, usage,
                 replyMarkup: new ReplyKeyboardHide());
+      }
+      else if(message.Text.StartsWith("/list"))
+      {
+        string msg = "";
+        if(PartyManager.Parties == null)
+        {
+          msg += "No parties planned for today =(";
+          await Bot.SendTextMessageAsync(message.Chat.Id, msg,
+        replyMarkup: new ReplyKeyboardHide());
+        }
+        else
+        {
+          msg += "List of parties planned for today: \n";
+          foreach (var item in PartyManager.Parties)
+          {
+            msg += item.PartyName + "\n";
           }
+          await Bot.SendTextMessageAsync(message.Chat.Id, msg,
+          replyMarkup: new ReplyKeyboardHide()); 
+        }
+      }
+      else if(message.Chat.Type == ChatType.Private)
+      {
+        UserSession session = SessionManager.GetSessionByUserId(message.From.Id);
+        if(session.CurrentState == SessionState.CreateParty)
+        {
+          string[] partyInfo = message.Text.Split('\n');
+          foreach (var item in partyInfo)
+          {
+            Console.WriteLine(item);
+          }
+          if (partyInfo.Length != 4)
+            await Bot.SendTextMessageAsync(message.Chat.Id, "Try again please", replyMarkup: new ReplyKeyboardHide());
+          else
+          {
+            Party party = new Party(message.From.Id, partyInfo[0], partyInfo[1], partyInfo[2], partyInfo[3]);
+            PartyManager.EditOrCreateParty(party);
+            string msg = "Вечеринка успешно создана:\n";
+            msg += "Организатор вечеринки: " + party.OwnerName + "\n";
+            msg += "Название: " + party.PartyName + "\n";
+            msg += "Дата и время проведения: " + party.PartyDateTimeString + "\n";
+            msg += "Описание: " + party.PartyDescription + "\n";
+            session.CurrentState = SessionState.Idle;
+            await Bot.SendTextMessageAsync(message.Chat.Id, msg, replyMarkup: new ReplyKeyboardHide());
+          }
+        }
+      }
     }
 
-        private static async void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
-        {
+    private static async void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
+    {
       
       Console.WriteLine("CALLBACK "+callbackQueryEventArgs.CallbackQuery.Message.Text.ToString());
       await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
                 $"Received {callbackQueryEventArgs.CallbackQuery.Data}");
-        }
+    }
     private static bool IsGreetMessage(string msg)
     {
       bool b = greetingStrings.Any(s => msg.ToLower().Contains(s));
       return b;
     }
-    }
+  }
 }
