@@ -120,6 +120,21 @@ namespace MyTelegramBot
         await Bot.SendTextMessageAsync(message.Chat.Id, greetingMessage,
                 replyMarkup: new ReplyKeyboardHide());
       }
+      else if (message.Text.ToLower().StartsWith("да, бот?"))
+      {
+        string msg;
+        if (message.From.Id == 142654796)
+        {
+          msg = "Да, хозяин";
+        }
+        else
+        {
+          msg = "А жопе слова не давали!";
+        }
+
+        await Bot.SendTextMessageAsync(message.Chat.Id, msg,
+              replyMarkup: new ReplyKeyboardHide());
+      }
       else if ((message.Text.StartsWith("/weather")) || ((message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup)
         && message.Text.ToLower().Contains("погода")))
       {
